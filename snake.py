@@ -10,7 +10,7 @@ dis_width=800
 dis_height=600
 
 block=10
-snake_speed=30
+snake_speed=15
 
 dis=pygame.display.set_mode((dis_width,dis_height))
 font_style = pygame.font.SysFont("bahnschrift", 25)
@@ -35,7 +35,7 @@ def game():
   game_replay=False
   x1=dis_width/2
   y1=dis_height/2
-  x1_change = 0       
+  x1_change = 0
   y1_change = 0
   snake_list=[]
   snake_length=1
@@ -79,8 +79,47 @@ def game():
       if x1 >= dis_width or x1 < 0 or y1 >= dis_height or y1 < 0:
         game_replay = True
 
-      x1 += x1_change
-      y1 += y1_change
+      if len(snake_list) >= 3:
+
+        snake1=snake_list[len(snake_list)-1]
+        snake2=snake_list[len(snake_list)-2]
+
+        if snake1[0] == snake2[0]+10:
+          if x1_change == -10:
+            x1 += 10
+          else:
+            x1 += x1_change
+          y1 += y1_change
+
+        elif snake1[0] == snake2[0]-10:
+          if x1_change == 10:
+            x1 += -10
+          else:
+            x1 += x1_change
+          y1 += y1_change
+
+        elif snake1[1] == snake2[1]+10:
+          if y1_change == -10:
+            y1 += 10
+          else:
+            y1 += y1_change
+          x1 += x1_change
+
+        elif snake1[1] == snake2[1]-10:
+          if y1_change == 10:
+            y1 += -10
+          else:
+            y1 += y1_change
+          x1 += x1_change
+        
+        else:
+          x1 += x1_change
+          y1 += y1_change          
+
+      else:
+        x1 += x1_change
+        y1 += y1_change
+
       dis.fill(black)
 
       pygame.draw.rect(dis,red,[foodx,foody,block,block])
@@ -98,6 +137,7 @@ def game():
       score(snake_length-1)
 
       pygame.display.update()
+      #print(snake_list)
 
       if x1 == foodx and y1 == foody:
         foodx= round(random.randint(0, dis_width - block) / 10.0) * 10.0
